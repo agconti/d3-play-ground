@@ -66,12 +66,11 @@ svg.append "g"
     .attr
         class: "domain"
         y2: svgHeight
-        
+
 draw = (data) ->
 
     dataMax = d3.max data
     xScale.domain([0, dataMax])
-
 
     svg
         .select ".x.axis"
@@ -125,12 +124,10 @@ draw = (data) ->
         .attr "width", 0
         .remove()
 
-
 $ ->
     draw(data[0])
 
 $ document
     .on "change", "#group", ->
-        console.log "changing. Data:"
-        console.log (data[$(@).val()])
-        draw(data[$(@).val()])
+        dataChoice = $(@).val()
+        draw(data[dataChoice])
