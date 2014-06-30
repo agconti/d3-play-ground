@@ -2,6 +2,11 @@
 chart = '#chart'
 primaryColor = "#59E294"
 secondaryColor = "#214592"
+enterColor = "green"
+updateColor = "yellow"
+exitColor = "red"
+animationDelay = 250
+andimationDuration = 500
 
 margin =
     top: 20
@@ -65,20 +70,41 @@ draw = (data) ->
     dataMax = d3.max data
     xScale.domain([0, dataMax])
 
+
     svg
         .select ".x.axis"
         .transition()
-        .delay 1000
-        .duration 1000
+        .delay animationDelay
+        .duration andimationDuration
         .call xAxis
 
     bar = svg.selectAll "rect"
-        .data data
+        .data data, (d) -> d
+
+    barEnter = bar.enter()
+        .append "rect"
+        .style
+            "fill": enterColor
+            "fill-opacity", 0
+        .attr "width", 0
+        .transition()
+        .delay animationDelay
+        .duration andimationDuration
+        .style
+            stroke: "white"
+            fill: (d) -> colorScale(d)
+            "fill-opacity", 1
+        .attr
+            x: barPadding
+            y: (d, i) -> yScale(i)
+            width: (d) -> xScale(d)
+            height: -> yScale.rangeBand()
 
     barUpdate = bar
+        .style "fill", updateColor
         .transition()
-        .delay 1000
-        .duration 1000
+        .delay animationDelay
+        .duration andimationDuration
         .style
             stroke: "gray"
             fill: (d) -> colorScale(d)
@@ -88,25 +114,13 @@ draw = (data) ->
             width: (d) -> xScale(d)
             height: -> yScale.rangeBand()
 
-    barEnter = bar.enter()
-        .append "rect"
-        .style
-            stroke: "white"
-            fill: (d) -> colorScale(d)
-        .attr
-            x: barPadding
-            y: (d, i) -> yScale(i)
-            width: (d) -> xScale(d)
-            height: -> yScale.rangeBand()
-
     barExit = bar.exit()
-        .style "fill", "red"
+        .style "fill", exitColor
         .transition()
-        .delay 1000
-        .duration 1000
-        .style
-            color: "red"
-            "fill-opacity": 0
+        .delay animationDelay
+        .duration andimationDuration
+        .style "fill-opacity", 0
+        .attr "width", 0
         .remove()
 
 
