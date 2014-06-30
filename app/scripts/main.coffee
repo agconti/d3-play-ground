@@ -19,13 +19,10 @@ group2 = [4..7]
 group3 = [7..10]
 
 data = [group1, group2, group3]
-
 dataMin = d3.min data, (d) -> d3.min d
 dataMax = d3.max data, (d) -> d3.max d
 
-
 xScale = d3.scale.linear()
-    .domain([0, dataMax])
     .range([0, svgWidth])
 
 yScale = d3.scale.ordinal()
@@ -63,10 +60,33 @@ svg.append "g"
         class: "domain"
         y2: svgHeight
 
-placeBars = (data) ->
+draw = (data) ->
+
+    dataMax = d3.max data
+    xScale.domain([0, dataMax])
+
+    svg
+        .select ".x.axis"
+        .transition()
+        .delay 1000
+        .duration 1000
+        .call xAxis
 
     bar = svg.selectAll "rect"
         .data data
+
+    barUpdate = bar
+        .transition()
+        .delay 1000
+        .duration 1000
+        .style
+            stroke: "gray"
+            fill: (d) -> colorScale(d)
+        .attr
+            x: barPadding
+            y: (d, i) -> yScale(i)
+            width: (d) -> xScale(d)
+            height: -> yScale.rangeBand()
 
     barEnter = bar.enter()
         .append "rect"
@@ -79,27 +99,22 @@ placeBars = (data) ->
             width: (d) -> xScale(d)
             height: -> yScale.rangeBand()
 
-    barUpdate = bar
-        .style
-            stroke: "gray"
-            fill: (d) -> colorScale(d)
-        .attr
-            x: barPadding
-            y: (d, i) -> yScale(i)
-            width: (d) -> xScale(d)
-            height: -> yScale.rangeBand()
-        .trasition
-
     barExit = bar.exit()
+        .style "fill", "red"
+        .transition()
+        .delay 1000
+        .duration 1000
+        .style
+            color: "red"
+            "fill-opacity": 0
         .remove()
 
 
 $ ->
-    # start app
-    placeBars(data[0])
+    draw(data[0])
 
 $ document
     .on "change", "#group", ->
         console.log "changing. Data:"
         console.log (data[$(@).val()])
-        placeBars(data[$(@).val()])
+        draw(data[$(@).val()])
