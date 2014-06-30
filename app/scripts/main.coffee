@@ -14,16 +14,16 @@ margin =
     bottom: 30
     left: 40
 
-svgWidth = 960
-svgHeight = 500
+svgWidth = 700
+svgHeight = 300
 
 barPadding = 1
 
 group1 = [1..4]
 group2 = [4..7]
 group3 = [7..10]
-
 data = [group1, group2, group3]
+
 dataMin = d3.min data, (d) -> d3.min d
 dataMax = d3.max data, (d) -> d3.max d
 
@@ -48,6 +48,8 @@ svg = d3.select chart
     .attr
         height: "#{ svgHeight + margin.top + margin.bottom }px"
         width: "#{ svgWidth + margin.left + margin.right }px"
+        viewBox: "0 0 #{svgWidth} #{svgHeight}"
+        preserveAspectRatio: "xMidYMid"
     .style "margin-left", "#{-margin.left}px"
     .append "g"
     .attr "transform", "translate(#{margin.left}, #{margin.top})"
@@ -64,6 +66,23 @@ svg.append "g"
     .attr
         class: "domain"
         y2: svgHeight
+
+resize = ->
+    svgWidth = $(chart).width()
+    console.log "resoze"
+    console.log svgWidth
+    xScale.range([0, svgWidth])
+
+    svg
+        .attr
+            height: "#{ svgHeight + margin.top + margin.bottom }px"
+            width: "#{ svgWidth + margin.left + margin.right }px"
+        .style "margin-left", "#{-margin.left}px"
+        .selectAll "g"
+        .attr "transform", "translate(#{margin.left}, #{margin.top})"
+
+d3.select window
+    .on 'resize', resize
 
 draw = (data) ->
 
@@ -105,14 +124,14 @@ draw = (data) ->
         .transition()
         .delay animationDelay
         .duration andimationDuration
+        .attr
+            y: (d, i) -> yScale(i)
+        .transition()
         .style
             stroke: "gray"
             fill: (d) -> colorScale(d)
         .attr
-            x: barPadding
-            y: (d, i) -> yScale(i)
             width: (d) -> xScale(d)
-            height: -> yScale.rangeBand()
 
     barExit = bar.exit()
         .style "fill", exitColor
