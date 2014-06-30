@@ -37,9 +37,9 @@ yScale = d3.scale.ordinal()
     .rangeBands([0, svgHeight])
 
 colorScale = d3.scale.linear()
-            .domain([dataMin, dataMax])
-            .range([primaryColor, secondaryColor])
-            .interpolate(d3.interpolateHcl)
+    .domain([dataMin, dataMax])
+    .range([primaryColor, secondaryColor])
+    .interpolate(d3.interpolateHcl)
 
 xAxis = d3.svg.axis()
     .scale xScale
@@ -98,7 +98,7 @@ draw = (data) ->
             x: barPadding
             y: (d, i) -> yScale(i)
             width: (d) -> xScale(d)
-            height: -> yScale.rangeBand()
+            height: yScale.rangeBand()
 
     barUpdate = bar
         .style
@@ -115,6 +115,7 @@ draw = (data) ->
             fill: (d) -> colorScale(d)
         .attr
             width: (d) -> xScale(d)
+            height: yScale.rangeBand()
 
     barExit = bar.exit()
         .style "fill", exitColor
