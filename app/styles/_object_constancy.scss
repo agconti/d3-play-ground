@@ -17,3 +17,20 @@
       shape-rendering: crispEdges;
     }
 }
+.x.axis{
+    path {
+        display: none;
+    }
+    line {
+      stroke: #fff;
+    }
+    .minor {
+      stroke-opacity: 0.5;
+    }
+}
+.y.axis{
+    line{
+        stroke-width: 2;
+        stroke: black;
+    }
+}

@@ -1,10 +1,12 @@
 # obj constancy
 chart = '#chart'
-primaryColor = "#59E294"
-secondaryColor = "#214592"
-enterColor = "green"
-updateColor = "yellow"
-exitColor = "red"
+primaryColor = "hsl(146, 70%, 62%)"
+secondaryColor = "hsl(221, 63%, 35%)"
+enterColor = primaryColor
+exitColor = secondaryColor
+updateColor = "hsl(189, 100%, 38%)"
+strokePrimaryColor ="white"
+strokeSecondaryColor= "gray"
 animationDelay = 250
 andimationDuration = 500
 
@@ -22,8 +24,8 @@ barPadding = 1
 group1 = [1..4]
 group2 = [4..7]
 group3 = [7..10]
-data = [group1, group2, group3]
 
+data = [group1, group2, group3]
 dataMin = d3.min data, (d) -> d3.min d
 dataMax = d3.max data, (d) -> d3.max d
 
@@ -42,14 +44,13 @@ colorScale = d3.scale.linear()
 xAxis = d3.svg.axis()
     .scale xScale
     .orient "bottom"
+    .tickSize -svgHeight
 
 svg = d3.select chart
     .append 'svg'
     .attr
         height: "#{ svgHeight + margin.top + margin.bottom }px"
         width: "#{ svgWidth + margin.left + margin.right }px"
-        viewBox: "0 0 #{svgWidth} #{svgHeight}"
-        preserveAspectRatio: "xMidYMid"
     .style "margin-left", "#{-margin.left}px"
     .append "g"
     .attr "transform", "translate(#{margin.left}, #{margin.top})"
@@ -62,9 +63,8 @@ svg.append "g"
 
 svg.append "g"
     .attr "class", "y axis"
-  .append "line"
+    .append "line"
     .attr
-        class: "domain"
         y2: svgHeight
 
 draw = (data) ->
@@ -85,14 +85,14 @@ draw = (data) ->
     barEnter = bar.enter()
         .append "rect"
         .style
-            "fill": enterColor
+            fill: enterColor
             "fill-opacity", 0
         .attr "width", 0
         .transition()
         .delay animationDelay
         .duration andimationDuration
         .style
-            stroke: "white"
+            stroke: strokePrimaryColor
             fill: (d) -> colorScale(d)
             "fill-opacity", 1
         .attr
@@ -102,7 +102,9 @@ draw = (data) ->
             height: -> yScale.rangeBand()
 
     barUpdate = bar
-        .style "fill", updateColor
+        .style
+            fill: updateColor
+            stroke: strokeSecondaryColor
         .transition()
         .delay animationDelay
         .duration andimationDuration
@@ -110,7 +112,7 @@ draw = (data) ->
             y: (d, i) -> yScale(i)
         .transition()
         .style
-            stroke: "gray"
+            stroke: strokePrimaryColor
             fill: (d) -> colorScale(d)
         .attr
             width: (d) -> xScale(d)
