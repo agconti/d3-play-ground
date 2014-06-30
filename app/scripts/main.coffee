@@ -44,7 +44,6 @@ colorScale = d3.scale.linear()
 xAxis = d3.svg.axis()
     .scale xScale
     .orient "bottom"
-    .tickSize -svgHeight
 
 svg = d3.select chart
     .append 'svg'
