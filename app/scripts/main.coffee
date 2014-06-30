@@ -94,7 +94,7 @@ draw = (data) ->
         .style
             stroke: strokePrimaryColor
             fill: (d) -> colorScale(d)
-            "fill-opacity", 1
+            "fill-opacity": 1
         .attr
             x: barPadding
             y: (d, i) -> yScale(i)
