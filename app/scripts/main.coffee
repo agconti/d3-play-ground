@@ -66,24 +66,7 @@ svg.append "g"
     .attr
         class: "domain"
         y2: svgHeight
-
-resize = ->
-    svgWidth = $(chart).width()
-    console.log "resoze"
-    console.log svgWidth
-    xScale.range([0, svgWidth])
-
-    svg
-        .attr
-            height: "#{ svgHeight + margin.top + margin.bottom }px"
-            width: "#{ svgWidth + margin.left + margin.right }px"
-        .style "margin-left", "#{-margin.left}px"
-        .selectAll "g"
-        .attr "transform", "translate(#{margin.left}, #{margin.top})"
-
-d3.select window
-    .on 'resize', resize
-
+        
 draw = (data) ->
 
     dataMax = d3.max data
